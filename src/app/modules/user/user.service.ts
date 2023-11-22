@@ -7,22 +7,19 @@ const createUserInToDB = async (userData: TUser) => {
 };
 
 const getAllUsersFromDB = async () => {
-  const result = await UserModel.aggregate([
-    {
-      $project: {
-        userName: 1,
-        fullName: 1,
-        _id: 0,
-        age: 1,
-        email: 1,
-        address: 1,
-      },
-    },
-  ]);
+  const result = await UserModel.find({}).select({
+    password: 0,
+  });
+
+  return result;
+};
+const getSingleUserFromDB = async (id: string): Promise<TUser | null> => {
+  const result = await UserModel.findById(id);
   return result;
 };
 
 export const userService = {
   createUserInToDB,
   getAllUsersFromDB,
+  getSingleUserFromDB,
 };

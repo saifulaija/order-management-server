@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { userService } from './user.service';
 
-
 const createUser = async (req: Request, res: Response) => {
   try {
     const userData = req.body;
@@ -29,7 +28,7 @@ const getAllUsers = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: 'Users fetched successfully!',
-      data:result
+      data: result,
     });
   } catch (error) {
     console.log(error);
@@ -42,6 +41,30 @@ const getAllUsers = async (req: Request, res: Response) => {
     });
   }
 };
+
+const getSingleUser = async (req: Request, res: Response) => {
+  try {
+   const {userId} = req.params
+    
+    const result = await userService.getSingleUserFromDB(userId);
+    res.status(200).json({
+      success: true,
+      message: 'User fetched successfully!',
+      data:result
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: 'User not found',
+      error: {
+        code: 400,
+        description: 'User not found!',
+      },
+    });
+  }
+};
 export const userController = {
-  createUser,getAllUsers,
+  createUser,
+  getAllUsers,
+  getSingleUser,
 };
