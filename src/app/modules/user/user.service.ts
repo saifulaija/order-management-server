@@ -33,13 +33,7 @@ const getSingleUserFromDB = async (userId: string) => {
 // }
 
 const deleteSingleUserFromDB = async (userId: string) => {
-  const user = new UserModel();
-
-  if (!(await user.isUserExists(userId))) {
-    throw new Error('User not found');
-  }
-
-  const result = await user.findOneAndDelete(userId);
+  const result = await UserModel.deleteOne(userId);
   return result;
 };
 
@@ -53,7 +47,7 @@ const updateSingleUserFromDB = async (userId: string, userData: TUser) => {
 const createOrderToDB = async (userId: string, orderData: TUser) => {
   const result = await UserModel.updateOne(
     {
-      userId
+      userId,
     },
     {
       $push: {
@@ -64,6 +58,24 @@ const createOrderToDB = async (userId: string, orderData: TUser) => {
   return result;
 };
 
+// const getAllOrderByUserFromDB = async (userId: string) => {
+//   const result = await UserModel.aggregate([
+//     {$match:{userId:{$eq:userId}}},
+//     {$project:{orders:1, age:0}}
+//   ])
+
+//   return result;
+// };
+
+const getAllOrderByUserFromDB = async (userId: string) => {
+  const result = await UserModel.aggregate([
+    { $match: { userId: userId } },
+    { $project: { orders: 1, _id: 0 } },
+  ]);
+
+  return result;
+};
+
 export const userService = {
   createUserInToDB,
   getAllUsersFromDB,
@@ -71,4 +83,5 @@ export const userService = {
   deleteSingleUserFromDB,
   updateSingleUserFromDB,
   createOrderToDB,
+  getAllOrderByUserFromDB,
 };

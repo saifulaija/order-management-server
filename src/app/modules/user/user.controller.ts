@@ -78,7 +78,7 @@ const deleteSingleUser=async(req:Request, res:Response)=>{
     res.status(200).json({
       success: true,
       message: "User deleted successfully!",
-     data:null
+     data:result
     })
   } catch (error:any) {
     res.status(400).json({
@@ -137,6 +137,28 @@ const createOrder=async(req:Request, res:Response)=>{
 }
 
 
+const getAllOrders = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+
+    const result = await userService.getAllOrderByUserFromDB(userId);
+    res.status(200).json({
+      success: true,
+      message: 'Order faced successfully',
+      data: result,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: 'User not found',
+      error: {
+        code: 400,
+        description: 'User not found!',
+      },
+    });
+  }
+};
+
 export const userController = {
   createUser,
   getAllUsers,
@@ -144,4 +166,5 @@ export const userController = {
   deleteSingleUser,
   updateSingleUser,
   createOrder,
+  getAllOrders,
 };
