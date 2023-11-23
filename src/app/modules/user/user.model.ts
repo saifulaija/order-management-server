@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-this-alias */
 import { Schema, model } from 'mongoose';
 import { TUser } from './user.interface';
+import bcrypt from 'bcrypt';
+import config from '../../config';
 
 const userSchema = new Schema<TUser>({
-  userId: { type: String,  unique: true },
+  userId: { type: String, unique: true },
   userName: { type: String, required: [true, 'userName is required'] },
   password: { type: String, required: [true, 'password is required'] },
   fullName: {
@@ -14,7 +17,7 @@ const userSchema = new Schema<TUser>({
   isActive: { type: Boolean },
   hobbies: {
     type: [String],
-    
+
     default: [],
   },
   address: {
@@ -24,6 +27,18 @@ const userSchema = new Schema<TUser>({
   },
 });
 
-// 3. Create a Model.
+//convert hash password using bcrypt----and middleware--
+
+userSchema.pre('save', async function (next) {
+  const user = this;
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_rounds),
+  );
+  next()
+});
+
+
+//  Create a Model-------
 
 export const UserModel = model<TUser>('User', userSchema);
