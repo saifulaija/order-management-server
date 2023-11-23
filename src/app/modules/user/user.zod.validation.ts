@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 const FullNameSchema = z.object({
+      
   firstName: z.string({
     required_error: 'first name is required',
   }),
@@ -22,9 +23,7 @@ const AddressSchema = z.object({
 });
 
 export const UserZodSchema = z.object({
-  userId: z.string({
-      required_error:'user id is required'
-  }),
+      userId: z.string(),
   userName: z.string({
     required_error: 'userName is required',
     invalid_type_error: 'userName must be a string',

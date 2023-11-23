@@ -68,8 +68,80 @@ const getSingleUser = async (req: Request, res: Response) => {
     });
   }
 };
+
+
+
+const deleteSingleUser=async(req:Request, res:Response)=>{
+  try {
+    const {userId} = req.params;
+    const result = await userService.deleteSingleUserFromDB(userId)
+    res.status(200).json({
+      success: true,
+      message: "User deleted successfully!",
+     data:null
+    })
+  } catch (error:any) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+      code: {
+        code: 400,
+        description: 'User not found!',
+      },
+    });
+  }
+}
+const updateSingleUser=async(req:Request, res:Response)=>{
+  try {
+    const {userId} = req.params;
+    const userData=req.body;
+    const result = await userService.updateSingleUserFromDB(userId,userData)
+    res.status(200).json({
+      success: true,
+      message: "User updated successfully!",
+     data:result
+    })
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: 'User not found',
+      error: {
+        code: 400,
+        description: 'User not found!',
+      },
+    });
+  }
+}
+const createOrder=async(req:Request, res:Response)=>{
+  try {
+    const {userId} = req.params;
+    const orderData=req.body;
+
+    console.log(userId, orderData)
+    const result = await userService.createOrderToDB(userId,orderData)
+    res.status(200).json({
+      success: true,
+      message: "order created successfully!",
+     data:null
+    })
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: 'User not found',
+      error: {
+        code: 400,
+        description: 'User not found!',
+      },
+    });
+  }
+}
+
+
 export const userController = {
   createUser,
   getAllUsers,
   getSingleUser,
+  deleteSingleUser,
+  updateSingleUser,
+  createOrder,
 };
