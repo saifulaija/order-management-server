@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose';
 import { TUser } from './user.interface';
 
 const userSchema = new Schema<TUser>({
-  userId: { type: String, required: [true, 'Id is required'], unique: true },
+  userId: { type: String,  unique: true },
   userName: { type: String, required: [true, 'userName is required'] },
   password: { type: String, required: [true, 'password is required'] },
   fullName: {
@@ -14,7 +14,7 @@ const userSchema = new Schema<TUser>({
   isActive: { type: Boolean },
   hobbies: {
     type: [String],
-    required: [true, 'hobbies is required'],
+    
     default: [],
   },
   address: {

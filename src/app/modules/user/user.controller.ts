@@ -1,10 +1,15 @@
 import { Request, Response } from 'express';
 import { userService } from './user.service';
 
+import UserZodSchema from './user.zod.validation';
+
 const createUser = async (req: Request, res: Response) => {
   try {
-    const userData = req.body;
-    const result = await userService.createUserInToDB(userData);
+    const  userData  = req.body;
+    //validation by zod---------
+    const zodParseData = UserZodSchema.parse(userData);
+
+    const result = await userService.createUserInToDB(zodParseData);
     res.status(201).json({
       success: true,
       message: 'User created successfully!',
@@ -44,13 +49,13 @@ const getAllUsers = async (req: Request, res: Response) => {
 
 const getSingleUser = async (req: Request, res: Response) => {
   try {
-   const {userId} = req.params
-    
+    const { userId } = req.params;
+
     const result = await userService.getSingleUserFromDB(userId);
     res.status(200).json({
       success: true,
       message: 'User fetched successfully!',
-      data:result
+      data: result,
     });
   } catch (error) {
     res.status(400).json({
