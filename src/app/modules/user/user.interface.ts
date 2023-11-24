@@ -29,6 +29,7 @@ export type TUser = {
 //for static method
 
 export type userMethods={
-  isUserExists(id:string):Promise<TUser | null>
+  isUserExists(userId:string):Promise<TUser | null>
 }
+
 export type customModel = Model<TUser, Record<string, never>, userMethods>;

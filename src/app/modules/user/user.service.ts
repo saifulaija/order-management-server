@@ -16,11 +16,32 @@ const getAllUsersFromDB = async () => {
 
   return result;
 };
+// const getSingleUserFromDB = async (userId: string) => {
+//   const user= new UserModel()
+//   if(await !user.isUserExists(userId)){
+//     throw new Error ('user not found here')
+//   }
+
+//   const result = await UserModel.findOne({userId})
+
+//   return result;
+// };
+
+
+
 const getSingleUserFromDB = async (userId: string) => {
+  const user = new UserModel();
+ console.log(userId)
+
+  if (!(await user.isUserExists(userId))) {
+    throw new Error('User not found');
+  }
+
   const result = await UserModel.findOne({ userId });
 
   return result;
 };
+
 
 // const deleteSingleUserFromDB=async(userId:string)=>{
 //   const user = new UserModel()

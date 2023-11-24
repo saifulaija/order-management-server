@@ -57,8 +57,8 @@ userSchema.methods.toJSON = function () {
 
 //create a custom static method------
 
-userSchema.methods.isUserExists = async function (id: string) {
-  const existingUser = UserModel.findOne({ id });
+userSchema.methods.isUserExists = async function (userId: string) {
+  const existingUser = await UserModel.findOne({ userId });
   return existingUser;
 };
 
