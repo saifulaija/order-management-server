@@ -6,7 +6,11 @@ import config from '../../config';
 
 const userSchema = new Schema<TUser, customModel, userMethods>({
   userId: { type: String, unique: true },
-  userName: { type: String, required: [true, 'userName is required'], unique:true },
+  userName: {
+    type: String,
+    required: [true, 'userName is required'],
+    unique: true,
+  },
   password: {
     type: String,
     required: [true, 'password is required'],
@@ -40,6 +44,22 @@ const userSchema = new Schema<TUser, customModel, userMethods>({
 
 //convert hash password using bcrypt----and middleware--
 
+// userSchema.pre('updateOne', async function (next) {
+//   const update:TUser= this.getUpdate();
+
+//   if (update.password) {
+//     update.password = await bcrypt.hash(
+//       update.password,
+//       Number(config.bcrypt_salt_rounds),
+//     );
+//   }
+
+//   console.log('update', update.password);
+
+//   // Call next to proceed with the update operation
+//   next();
+// });
+
 userSchema.pre('save', async function (next) {
   const user = this;
   user.password = await bcrypt.hash(
@@ -49,17 +69,14 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-
-//hide password for response 
+//hide password for response
 
 userSchema.methods.toJSON = function () {
   const userObject = this.toObject();
   delete userObject.password;
-  delete userObject.orders; 
+  delete userObject.orders;
   return userObject;
 };
-
-
 
 //create a custom static method------
 
@@ -68,7 +85,7 @@ userSchema.methods.isUserExists = async function (userId: string) {
   return existingUser;
 };
 
-userSchema.index({ userId: 1, userName:1 }, { unique: true });
+userSchema.index({ userId: 1, userName: 1 }, { unique: true });
 export const UserModel1 = model<TUser, customModel>('User', userSchema);
 
 //  Create a Model-------

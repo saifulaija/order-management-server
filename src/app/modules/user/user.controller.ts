@@ -3,6 +3,9 @@ import { userService } from './user.service';
 
 import UserZodSchema from './user.zod.validation';
 
+import bcrypt from 'bcrypt';
+import config from '../../config';
+
 const createUser = async (req: Request, res: Response) => {
   try {
     const userData = req.body.data;
@@ -77,7 +80,7 @@ const deleteSingleUser = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: 'User deleted successfully!',
-      data: null
+      data: null,
     });
   } catch (error: any) {
     res.status(404).json({
@@ -94,13 +97,28 @@ const updateSingleUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
     const userData = req.body;
-    console.log(userData, userId)
+    const password = userData.password;
+    if (password) {
+      const hashedPassword = await bcrypt.hash(
+        password,
+        Number(config.bcrypt_salt_rounds),
+      );
+      userData.password = hashedPassword;
+    }
+    console.log(userData, userId);
     const result = await userService.updateSingleUserFromDB(userId, userData);
-    res.status(200).json({
-      success: true,
-      message: 'User updated successfully!',
-      data: result,
-    });
+    if (!result) {
+      res.status(404).json({
+        success: false,
+        message: 'field not found',
+      });
+    } else {
+      res.status(200).json({
+        success: true,
+        message: 'User update successfully!',
+        data: result,
+      });
+    }
   } catch (error) {
     res.status(400).json({
       success: false,
@@ -112,8 +130,6 @@ const updateSingleUser = async (req: Request, res: Response) => {
     });
   }
 };
-
-
 
 const createOrder = async (req: Request, res: Response) => {
   try {
@@ -127,12 +143,12 @@ const createOrder = async (req: Request, res: Response) => {
       message: 'order created successfully!',
       data: null,
     });
-  } catch (error) {
+  } catch (err: any) {
     res.status(400).json({
       success: false,
-      message: 'User not found',
+      message: err.message,
       error: {
-        code: 400,
+        code: 404,
         description: 'User not found!',
       },
     });
@@ -142,17 +158,16 @@ const createOrder = async (req: Request, res: Response) => {
 const getAllOrders = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
-
     const result = await userService.getAllOrderByUserFromDB(userId);
     res.status(200).json({
       success: true,
       message: 'Order faced successfully',
       data: result,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(400).json({
       success: false,
-      message: 'User not found',
+      message: error.message,
       error: {
         code: 400,
         description: 'User not found!',
@@ -171,10 +186,10 @@ const getTotalPriceOfOrders = async (req: Request, res: Response) => {
       message: 'Total price calculated successfully!',
       data: result,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(400).json({
       success: false,
-      message: 'User not found',
+      message: error.message,
       error: {
         code: 400,
         description: 'User not found!',

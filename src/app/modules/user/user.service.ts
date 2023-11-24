@@ -1,10 +1,9 @@
 import { TUser } from './user.interface';
 import { UserModel } from './user.model';
 
+
 const createUserInToDB = async (userData: TUser) => {
   const result = await UserModel.create(userData);
-  //  const user = new UserModel(userData)
-
   return result;
 };
 
@@ -34,32 +33,46 @@ const getSingleUserFromDB = async (userId: string) => {
   return result;
 };
 
-const deleteSingleUserFromDB=async(userId:string)=>{
-  const user = new UserModel()
-  if(!(await user.isUserExists(userId))){
-throw new Error('user not found')
-
+const deleteSingleUserFromDB = async (userId: string) => {
+  const user = new UserModel();
+  if (!(await user.isUserExists(userId))) {
+    throw new Error('user not found');
   }
-  const result = await UserModel.deleteOne({userId})
-  return result
-}
-
-
-
-// const deleteSingleUserFromDB = async (userId: string) => {
-//   const result = await UserModel.deleteOne(userId);
-//   return result;
-// };
-
-const updateSingleUserFromDB = async (id: string, userData: TUser) => {
-  const result = await UserModel.updateOne(id, userData, {
-    new: true,
-    runValidators: true,
-  });
+  const result = await UserModel.deleteOne({ userId });
   return result;
 };
 
+const updateSingleUserFromDB = async (
+  userId: string,
+  userData: TUser,
+): Promise<TUser | null> => {
+  const user = new UserModel();
+  console.log(userId);
+
+  if (!(await user.isUserExists(userId))) {
+    throw new Error('User not found');
+  }
+
+  const result = await UserModel.updateOne({ userId: userId }, userData, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (result.modifiedCount > 0) {
+    const updatedUser = await UserModel.findOne({ userId: userId });
+    return updatedUser;
+  } else {
+    return null;
+  }
+};
+
 const createOrderToDB = async (userId: string, orderData: TUser) => {
+  const user = new UserModel();
+  console.log(userId);
+
+  if (!(await user.isUserExists(userId))) {
+    throw new Error('User not found');
+  }
   const result = await UserModel.updateOne(
     {
       userId,
@@ -70,10 +83,18 @@ const createOrderToDB = async (userId: string, orderData: TUser) => {
       },
     },
   );
+
   return result;
 };
 
 const getAllOrderByUserFromDB = async (userId: string) => {
+  const user = new UserModel();
+  console.log(userId);
+
+  if (!(await user.isUserExists(userId))) {
+    throw new Error('User not found');
+  }
+
   const result = await UserModel.aggregate([
     { $match: { userId: userId } },
     { $project: { orders: 1, _id: 0 } },
@@ -83,6 +104,12 @@ const getAllOrderByUserFromDB = async (userId: string) => {
 };
 
 const getTotalPriceOfOrdersFromDB = async (userId: string) => {
+  const user = new UserModel();
+  console.log(userId);
+
+  if (!(await user.isUserExists(userId))) {
+    throw new Error('User not found');
+  }
   const result = await UserModel.aggregate([
     { $match: { userId: userId } },
     { $unwind: '$orders' },

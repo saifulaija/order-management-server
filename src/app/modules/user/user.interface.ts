@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Model } from "mongoose";
+import { Model } from 'mongoose';
 
 export type TUser = {
   userId: string;
@@ -18,18 +18,19 @@ export type TUser = {
     city: string;
     country: string;
   };
-  orders?:[{
-    productName:string,
-    price:number,
-    quantity:number
-  }]
+  orders?: [
+    {
+      productName: string;
+      price: number;
+      quantity: number;
+    },
+  ];
 };
-
 
 //for static method
 
-export type userMethods={
-  isUserExists(userId:string):Promise<TUser | null>
-}
+export type userMethods = {
+  isUserExists(userId: string): Promise<TUser | null>;
+};
 
 export type customModel = Model<TUser, Record<string, never>, userMethods>;
