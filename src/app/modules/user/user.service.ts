@@ -1,7 +1,6 @@
 import { TUser } from './user.interface';
 import { UserModel } from './user.model';
 
-
 const createUserInToDB = async (userData: TUser) => {
   const result = await UserModel.create(userData);
   return result;
@@ -110,17 +109,23 @@ const getTotalPriceOfOrdersFromDB = async (userId: string) => {
   if (!(await user.isUserExists(userId))) {
     throw new Error('User not found');
   }
+
   const result = await UserModel.aggregate([
     { $match: { userId: userId } },
     { $unwind: '$orders' },
     {
       $group: {
-        _id: '$_id',
-        totalPrice: { $sum: '$orders.price' },
+        _id: null,
+        totalPrice: {
+          $sum: {
+            $multiply: ['$orders.price', '$orders.quantity'],
+          },
+        },
       },
     },
     { $project: { _id: 0 } },
   ]);
+
   return result;
 };
 
