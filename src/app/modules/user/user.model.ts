@@ -49,11 +49,17 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
+
+//hide password for response 
+
 userSchema.methods.toJSON = function () {
   const userObject = this.toObject();
   delete userObject.password;
+  delete userObject.orders; 
   return userObject;
 };
+
+
 
 //create a custom static method------
 
