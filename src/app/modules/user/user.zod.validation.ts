@@ -33,8 +33,8 @@ const AddressSchema = z.object({
 });
 
 export const UserZodSchema = z.object({
-  userId: z.string(),
-  userName: z.string({
+  userId: z.number(),
+  username: z.string({
     required_error: 'userName is required',
     invalid_type_error: 'userName must be a string',
   }),

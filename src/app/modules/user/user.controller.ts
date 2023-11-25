@@ -52,7 +52,7 @@ const getAllUsers = async (req: Request, res: Response) => {
 
 const getSingleUser = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params;
+    const  userId  = parseInt(req.params.userId);
     console.log(userId);
 
     const result = await userService.getSingleUserFromDB(userId);
@@ -75,7 +75,7 @@ const getSingleUser = async (req: Request, res: Response) => {
 
 const deleteSingleUser = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params;
+    const  userId  = parseInt(req.params.userId);
     const result = await userService.deleteSingleUserFromDB(userId);
     res.status(200).json({
       success: true,
@@ -95,7 +95,7 @@ const deleteSingleUser = async (req: Request, res: Response) => {
 };
 const updateSingleUser = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params;
+    const  userId  = parseInt(req.params.userId);
     const userData = req.body;
     const password = userData.password;
     if (password) {
@@ -133,7 +133,7 @@ const updateSingleUser = async (req: Request, res: Response) => {
 
 const createOrder = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params;
+    const  userId  = parseInt(req.params.userId);
     const orderData = req.body;
 
     console.log(userId, orderData);
@@ -157,7 +157,7 @@ const createOrder = async (req: Request, res: Response) => {
 
 const getAllOrders = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params;
+    const  userId  = parseInt(req.params.userId);
     const result = await userService.getAllOrderByUserFromDB(userId);
     res.status(200).json({
       success: true,
@@ -178,7 +178,7 @@ const getAllOrders = async (req: Request, res: Response) => {
 
 const getTotalPriceOfOrders = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params;
+    const  userId  = parseInt(req.params.userId);
 
     const result = await userService.getTotalPriceOfOrdersFromDB(userId);
     res.status(200).json({

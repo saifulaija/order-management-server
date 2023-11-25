@@ -19,7 +19,7 @@ const getAllUsersFromDB = async () => {
   return result;
 };
 
-const getSingleUserFromDB = async (userId: string) => {
+const getSingleUserFromDB = async (userId: number) => {
   const user = new UserModel();
   console.log(userId);
 
@@ -32,7 +32,7 @@ const getSingleUserFromDB = async (userId: string) => {
   return result;
 };
 
-const deleteSingleUserFromDB = async (userId: string) => {
+const deleteSingleUserFromDB = async (userId: number) => {
   const user = new UserModel();
   if (!(await user.isUserExists(userId))) {
     throw new Error('user not found');
@@ -42,7 +42,7 @@ const deleteSingleUserFromDB = async (userId: string) => {
 };
 
 const updateSingleUserFromDB = async (
-  userId: string,
+  userId: number,
   userData: TUser,
 ): Promise<TUser | null> => {
   const user = new UserModel();
@@ -65,7 +65,7 @@ const updateSingleUserFromDB = async (
   }
 };
 
-const createOrderToDB = async (userId: string, orderData: TUser) => {
+const createOrderToDB = async (userId: number, orderData: TUser) => {
   const user = new UserModel();
   console.log(userId);
 
@@ -86,7 +86,7 @@ const createOrderToDB = async (userId: string, orderData: TUser) => {
   return result;
 };
 
-const getAllOrderByUserFromDB = async (userId: string) => {
+const getAllOrderByUserFromDB = async (userId: number) => {
   const user = new UserModel();
   console.log(userId);
 
@@ -102,7 +102,7 @@ const getAllOrderByUserFromDB = async (userId: string) => {
   return result;
 };
 
-const getTotalPriceOfOrdersFromDB = async (userId: string) => {
+const getTotalPriceOfOrdersFromDB = async (userId: number) => {
   const user = new UserModel();
   console.log(userId);
 

@@ -2,8 +2,8 @@
 import { Model } from 'mongoose';
 
 export type TUser = {
-  userId: string;
-  userName: string;
+  userId: number;
+  username: string;
   password: string;
   fullName: {
     firstName: string;
@@ -30,7 +30,7 @@ export type TUser = {
 //for static method
 
 export type userMethods = {
-  isUserExists(userId: string): Promise<TUser | null>;
+  isUserExists(userId: number): Promise<TUser | null>;
 };
 
-export type customModel = Model<TUser, Record<string, never>, userMethods>;
+export type customModel = Model<TUser, Record<number, never>, userMethods>;
