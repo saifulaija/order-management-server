@@ -8,7 +8,7 @@ import config from '../../config';
 
 const createUser = async (req: Request, res: Response) => {
   try {
-    const userData = req.body.data;
+    const userData = req.body;
     //validation by zod---------
     const zodParseData = UserZodSchema.parse(userData);
 
